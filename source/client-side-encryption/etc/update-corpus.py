@@ -25,4 +25,4 @@ for (key, val) in new_corpus_data.items():
         old_corpus_data[key] = new_corpus_data[key]
 
 open(old_corpus_path, "w").write(json.dumps(old_corpus_data, indent=2))
-print ("updated %s" % (old_corpus_path))
+print(f"updated {old_corpus_path}")

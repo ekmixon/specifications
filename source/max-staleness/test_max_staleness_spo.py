@@ -24,7 +24,7 @@ def main():
     step=2000
     interval=10
 
-    print("SPO Params: Iter: {}, step: {}, interval:{}".format(num_iterations,step,interval))
+    print(f"SPO Params: Iter: {num_iterations}, step: {step}, interval:{interval}")
 
     result = spo.basinhopping(func=simulate_staleness
                               ,x0= (10,200000,5000 ,3000 ,250 ,250 ,250)
@@ -36,13 +36,14 @@ def main():
                               ,interval=interval
                               ,disp= True)
 
-    print("Server update frequency:     {}\n"
-          "Client update frequency:     {}\n"\
-          "Potential calculation error: {}".format(s_freq,c_freq,abs(round(result.fun))))
+    print(
+        f"Server update frequency:     {s_freq}\nClient update frequency:     {c_freq}\nPotential calculation error: {abs(round(result.fun))}"
+    )
+
 
     print("\nArguments: ")
     for i in range(len(arglabels)):
-        print("val: {} \t {}".format(round(result.x[i]),arglabels[i]))
+        print(f"val: {round(result.x[i])} \t {arglabels[i]}")
 
 
 # Simulate staleness "error" given the absolute true lag, clock skew, and last time P/S were pinged, etc

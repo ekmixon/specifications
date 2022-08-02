@@ -543,12 +543,14 @@ def schema_w_type(type):
         "properties": {},
         "bsonType": "object"
     }
-    schema["properties"]["encrypted_" + type] = {"encrypt": {
-        "keyId": [keys["basic"]["_id"]],
-        "bsonType": type,
-        "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
+    schema["properties"][f"encrypted_{type}"] = {
+        "encrypt": {
+            "keyId": [keys["basic"]["_id"]],
+            "bsonType": type,
+            "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
+        }
     }
-    }
+
     return schema
 
 
@@ -603,6 +605,6 @@ for filepath in sys.argv[1:-1]:
     rendered = template.render(**injections)
     # check for valid YAML.
     parsed = yaml.load(rendered, Loader=yaml.Loader)
-    open(f"{os.path.join(targetdir,filename + '.yml')}", "w").write(rendered)
+    open(f"{os.path.join(targetdir, f'{filename}.yml')}", "w").write(rendered)
     print(f"Generated {os.path.join(targetdir,filename)}.yml")
     print("""Run "make" from specifications/source directory to generate corresponding JSON file""")

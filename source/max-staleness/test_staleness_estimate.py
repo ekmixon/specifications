@@ -81,7 +81,7 @@ def main(args):
     result_fmt = ','.join(result_record.values()) + ',"%s"'
     results = []
 
-    for i in range(args.TRIALS):
+    for _ in range(args.TRIALS):
         # Heartbeat frequency from 500ms to 2 minutes.
         heartbeat_sec = .5 + (np.random.rand() * (120 - .5))
         oplog = make_primary_oplog()

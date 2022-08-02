@@ -27,12 +27,13 @@ def allowed(map):
         return False
     if map["type"] in ["object", "array", "double", "decimal", "javascriptWithScope", "bool"]  and map["algo"] == "det":
         return False
-    if map["algo"] == "det" and map["identifier"] == "altname" and map["method"] == "auto":
-        # prohibited per SERVER-42010
-        return False
-    return True
+    return (
+        map["algo"] != "det"
+        or map["identifier"] != "altname"
+        or map["method"] != "auto"
+    )
 
-def gen_schema (map):
+def gen_schema(map):
     fmt = """ { "bsonType": "object", "properties": { "value": { "encrypt": { "keyId": %s, "algorithm": "%s", "bsonType": "%s" } } } } """
 
     if not allowed(map):
@@ -62,9 +63,9 @@ def gen_schema (map):
         algorithm = "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
 
     type = map["type"]
-    if map["type"].startswith("binData"):
+    if type.startswith("binData"):
         type = "binData"
-    
+
     return fmt % (key_id, algorithm, type)
 
 def get_bson_value (bson_type):
@@ -114,7 +115,7 @@ def get_bson_value (bson_type):
         return """{"$maxKey": 1}"""
 
 def field_name(map):
-    return "%s_%s_%s_%s_%s" % (map["kms"], map["type"], map["algo"], map["method"], map["identifier"])
+    return f'{map["kms"]}_{map["type"]}_{map["algo"]}_{map["method"]}_{map["identifier"]}'
 
 def gen_field (map):
     if not allowed(map) and map["method"] == "auto":
